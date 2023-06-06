@@ -1,0 +1,7 @@
+{:deps true
+ :dev-http {8080 "public"}
+ :builds {:app
+          {:target :browser
+           :modules {:main {:entries [app]
+                            :init-fn app/init}}
+           :devtools {:preloads [preload devtools.preload]}}}}
