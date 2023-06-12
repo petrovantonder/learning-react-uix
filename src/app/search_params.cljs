@@ -1,7 +1,8 @@
 (ns app.search-params
   (:require
    [uix.core :as uix :refer [defui $]]
-   [app.pet :as pet :refer [pet]]
+   [app.results :as results :refer [results]]
+   [app.use-breed-list :as use-breed-list :refer [use-breed-list]]
    [uix.dom]))
 
 (def ANIMALS ["bird", "cat", "dog", "rabbit", "reptile"])
@@ -23,7 +24,7 @@
         [animal set-animal!] (uix/use-state "")
         [breed set-breed!] (uix/use-state "")
         [pets set-pets!] (uix/use-state [])
-        breeds []]
+        breeds (first (use-breed-list animal))]
     ;;(request-pets set-pets! animal location breed)
     (uix/use-effect
      (fn []
@@ -59,11 +60,7 @@
                    nil)
                 (map #($ :option {:key %} %) breeds)))
           ($ :button "Submit"))
-       ($ :form
-          (map #($ pet {:name (:name %)
-                        :animal (:animal %)
-                        :breed (:breed %)
-                        :key (:id %)}) pets)))))
+       ($ results pets))))
 
 
 
