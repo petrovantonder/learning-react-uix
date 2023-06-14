@@ -4,7 +4,7 @@
    [app.pet :as pet :refer [pet]]
    [uix.dom]))
 
-(defui results [pets]
+(defui results [{:keys [pets]}]
   ($ :div {:className "search"}
      (if (empty? pets)
        ($ :h1 "No Pets Found")
@@ -12,8 +12,9 @@
                      :animal   (:animal %)
                      :breed    (:breed %)
                      :images   (:images %)
-                     :location [(:city %) (:state %)]
-                     :key      (:id %)}) pets))))
+                     :location (str (:city %) ", " (:state %))
+                     :key      (:id %)
+                     :id       (:id %)}) pets))))
 
 
 

@@ -13,5 +13,10 @@
     "react-dom": "^18.2.0",
     "react-refresh": "^0.14.0",
     "shadow-cljs": "2.22.9"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "4.10.1",
+    "react-query": "3.39.3",
+    "react-router-dom": "6.12.1"
   }
 }

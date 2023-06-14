@@ -1,31 +1,48 @@
 (ns app.app
   (:require
-   [cljs.spec.alpha :as s]
-   [clojure.edn :as edn]
    [uix.core :as uix :refer [defui $]]
-   [app.pet :as pet :refer [pet]]
+   [app.details :as details :refer [details]]
    [app.search-params :as search-params :refer [search-params]]
+   ["react-router-dom" :refer [Link BrowserRouter Routes Route]]
+   ["@tanstack/react-query" :refer [QueryClient QueryClientProvider]]
    [uix.dom]))
 
-(def pet-props
-  {:dog {:name "Lizzy"
-         :breed "Border Collie"
-         :animal "Dog"}
-   :cat {:name "Tom"
-         :breed "Pavement Special"
-         :animal "Cat"}
-   :rabbit {:name "Robbie"
-            :breed "Vlakhaas"
-            :animal "Hare"}})
+(def query-client
+  (QueryClient.
+   {:defaultOptions
+    {:queries {:staleTime js/Infinity
+               :cacheTime js/Infinity}}}))
 
 (defui app []
   ($ :div
-     ($ :h1 "Adopt Me!")
-     ($ search-params {:location "Seatle, WA"})
-     ;; ($ pet (:dog pet-props))
-     ;; ($ pet (:cat pet-props))
-     ;; ($ pet (:rabbit pet-props))
-     ))
+     ($ BrowserRouter
+        ($ QueryClientProvider {:client query-client}
+         ($ :header
+            ($ Link {:to "/"} "Adopt Me!"))
+         ;; ($ :h1 "Adopt Me!")
+         ($ Routes
+            ($ Route {:path "/details/:id"
+                      :element ($ details)})
+            ($ Route {:path "/"
+                      :element ($ search-params)}))))))
+
+;; (defui app []
+;;   (let [adopted-pet (uix/use-state nil)]
+;;     ($ :div
+
+;;        ($ BrowserRouter
+;;           ($ QueryClientProvider {:client query-client}
+;;              ($ (.-Provider adopted-pet-context)
+;;                 {:value adopted-pet}
+;;                 ($ :header
+;;                    ($ Link {:to "/"} "Adopt Me!" ))
+;;              ($ Routes
+;;                 ($ Route {:path "/details/:id" :element [($ details)]})
+;;                 ($ Route {:path "/" :element [($ search-parameters)]}))))
+;;           )))
+;;   )
+
+
 
 (defonce root
   (uix.dom/create-root (js/document.getElementById "root")))

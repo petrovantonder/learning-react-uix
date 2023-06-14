@@ -8,7 +8,7 @@
 (def ANIMALS ["bird", "cat", "dog", "rabbit", "reptile"])
 
 (defn request-pets [set-pets! animal location breed]
-  (println "request-pets" animal)
+  ;; (println "request-pets" animal)
   (let [result (js/fetch (str "http://pets-v2.dev-apis.com/pets?animal=" animal "&location=" location "&breed=" breed))]
     (-> result
         (.then (fn [response]
@@ -60,7 +60,7 @@
                    nil)
                 (map #($ :option {:key %} %) breeds)))
           ($ :button "Submit"))
-       ($ results pets))))
+       ($ results {:pets pets}))))
 
 
 
