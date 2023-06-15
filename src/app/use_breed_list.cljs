@@ -36,7 +36,8 @@
   (let [results (useQuery (clj->js ["breeds" animal]) fetch-breed-list)
         data    (js->clj (.-data results) :keywordize-keys true)
         status  (js->clj (.-status results))]
-    (println "use-breed-list results " (:breeds data))
+    ;;(js/console.log "use-breed-list results")
+    ;; (println "use-breed-list results " (:breeds data))
    (if (empty? animal)
      [[] status]
      [(:breeds data) status])
