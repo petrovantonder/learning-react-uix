@@ -14,11 +14,11 @@
                                               (clj->js {:location ""
                                                         :animal   ""
                                                         :breed    ""}))
-        _ (println (js->clj request-params))
+        ;; _ (println (js->clj request-params))
         [animal set-animal!] (uix/use-state "")
         breeds (first (use-breed-list animal))
         result (useQuery (clj->js ["search-params" request-params]) fetch-search)
-        _ (js/console.log "results for fetch-search " result)
+        ;; _ (js/console.log "results for fetch-search " result)
         pets (if (.-isLoading result)
                []
                (js->clj (.-pets (.-data result)) :keywordize-keys true))
