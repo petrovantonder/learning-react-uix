@@ -1,7 +1,8 @@
 (ns app.details
   (:require
    [uix.core :as uix :refer [defui $]]
-   ["react-router-dom" :refer [useParams]]
+   [app.adopted-pet-context :as adopted-pet-context :refer [adopted-pet-context]]
+   ["react-router-dom" :refer [useParams useNavigate]]
    ["@tanstack/react-query" :refer [useQuery]]
    [app.fetch-pets :as fetch-pets :refer [fetch-pet]]
    [app.modal :as modal :refer [modal]]
@@ -10,7 +11,9 @@
 (defui details []
   (let [id (:id (js->clj (useParams) :keywordize-keys true))
         results (useQuery (clj->js ["details" id]) fetch-pet)
-        [show-modal set-show-modal!] (uix/use-state false)]
+        [show-modal set-show-modal!] (uix/use-state false)
+        [_ set-adopted-pet!] (uix/use-context adopted-pet-context)
+        navigate (useNavigate)]
     ;; (println "pets data here " results)
     ;; (println "is loading? " (.-isLoading results))
     (if (.-isLoading results)
@@ -30,12 +33,13 @@
                   ($ :div
                      ($ :h1 "Would you like to adopt " (:name pet-data))
                      ($ :div {:className "buttons"}
-                        ($ :button "Yes")
+                        ($ :button {:onClick #(do
+                                                (set-adopted-pet! pet-data)
+                                               (navigate "/"))}
+                           "Yes")
                         ($ :button {:onClick #(set-show-modal! false)}
-                           "No"
-                           ))))
-               nil)))))
-    ))
+                           "No"))))
+               nil)))))))
 
 
 

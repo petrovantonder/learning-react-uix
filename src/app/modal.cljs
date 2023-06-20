@@ -4,7 +4,6 @@
    [uix.dom :as dom]))
 
 (defui modal [{:keys [children]}]
-(js/console.log "this is the children " children)
   (let [el-ref (uix/use-ref nil)]
     (when (nil? @el-ref)
       (reset! el-ref (js/document.createElement "div")))

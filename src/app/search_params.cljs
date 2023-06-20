@@ -3,6 +3,7 @@
    [uix.core :as uix :refer [defui $]]
    [app.results :as results :refer [results]]
    [app.use-breed-list :as use-breed-list :refer [use-breed-list]]
+   [app.adopted-pet-context :as adopted-pet-context :refer [adopted-pet-context]]
    ["@tanstack/react-query" :refer [useQuery]]
    [app.fetch-search :refer [fetch-search]]
    [uix.dom]))
@@ -14,16 +15,13 @@
                                               (clj->js {:location ""
                                                         :animal   ""
                                                         :breed    ""}))
-        ;; _ (println (js->clj request-params))
+        [adopted-pet] (js->clj (uix/use-context adopted-pet-context))
         [animal set-animal!] (uix/use-state "")
         breeds (first (use-breed-list animal))
         result (useQuery (clj->js ["search-params" request-params]) fetch-search)
-        ;; _ (js/console.log "results for fetch-search " result)
         pets (if (.-isLoading result)
                []
-               (js->clj (.-pets (.-data result)) :keywordize-keys true))
-        ;; _ (println "results for pets " pets)
-        ]
+               (js->clj (.-pets (.-data result)) :keywordize-keys true))]
     ($ :div {:className "search-params"}
        ($ :form {:onSubmit #(do
                               (.preventDefault %)
@@ -32,6 +30,11 @@
                                          :animal   (or (.get form-data "animal") "")
                                          :breed    (or (.get form-data "breed") "")}]
                                 (set-request-params! obj)))}
+          (if (empty? adopted-pet)
+            nil
+            ($ :div {:className "pet image-container"}
+               ($ :img {:src (get (:images adopted-pet) 0)
+                        :alt (:name adopted-pet)})))
           ($ :label {:htmlFor "location"}
              "Location"
              ($ :input {:id "location"
